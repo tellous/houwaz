@@ -1176,6 +1176,48 @@ function App() {
       </div>
 
       <section className="calendar">
+        <div className="calendar-header-actions" style={{display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', padding: '0.5rem 1rem'}}>
+          <button
+            type="button"
+            className="export-csv"
+            onClick={() => {
+              // build CSV: Date, Category, Hours, Rate, Amount
+              const rows: string[] = [];
+              rows.push(['Date', 'Category', 'Hours', 'Rate', 'Amount'].join(','));
+              Object.keys(dayEntries)
+                .map((k) => Number(k))
+                .sort((a, b) => a - b)
+                .forEach((day) => {
+                  const entries = dayEntries[day] ?? [];
+                  entries.forEach((entry) => {
+                    const cat = categories.find((c) => c.id === entry.categoryId);
+                    if (!cat) return;
+                    const date = `${month + 1}/${day}/${year}`;
+                    const hours = entry.hours;
+                    const rate = cat.dailyRate;
+                    const amount = Math.round(hours * rate * 100) / 100;
+                    // escape commas by wrapping in quotes when needed
+                    const safeCategory = cat.name.includes(',') ? `"${cat.name.replace(/"/g, '""')}"` : cat.name;
+                    rows.push([date, safeCategory, String(hours), String(rate), String(amount)].join(','));
+                  });
+                });
+
+              const csv = rows.join('\n');
+              const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `houwaz-${year}-${String(month + 1).padStart(2, '0')}.csv`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            }}
+            aria-label="Export CSV"
+          >
+            Export CSV
+          </button>
+        </div>
         <div className="weekday-row">
           <div className="weekday-spacer" />
           <div className="weekday-total-spacer" />
