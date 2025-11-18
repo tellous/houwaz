@@ -1221,8 +1221,8 @@ function App() {
                 </button>
               </div>
               <div className="week-total">
-                {weeklyDollars[wIdx] > 0 ? <div className="week-dollars">{formatMoney(weeklyDollars[wIdx])}</div> : null}
-                {weeklyHours[wIdx] > 0 ? <div className="week-hours">{formatNum(weeklyHours[wIdx])} hrs</div> : null}
+                <div className="week-dollars">{formatMoney(weeklyDollars[wIdx] || 0)}</div>
+                <div className="week-hours">{formatNum(weeklyHours[wIdx] || 0)} hrs</div>
               </div>
               {week.map((dayNumber, index) => {
                 if (dayNumber === null) {
