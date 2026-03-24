@@ -882,6 +882,30 @@ li.selected {
   font-size: 0.68rem;
   color: #475569;
 }
+.week-category-total {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 0.25rem;
+  padding-top: 0.2rem;
+  border-top: 1px solid #e2e8f0;
+  gap: 0.05rem;
+}
+.week-category-name {
+  font-size: 0.62rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.week-category-dollars {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #334155;
+}
+.week-category-hours {
+  font-size: 0.62rem;
+  color: #64748b;
+}
 
 .week-actions {
   display: flex;
