@@ -394,6 +394,33 @@ function App() {
     return out;
   }, [calendarCells]);
 
+  const weeklyCategoryTotals = useMemo(() => {
+    return weeks.map((week) => {
+      return categories
+        .filter((cat) => !cat.hidden)
+        .map((cat) => {
+          let hours = 0;
+          let dollars = 0;
+          week.forEach((day) => {
+            if (day && dayEntries[day]) {
+              dayEntries[day].forEach((entry) => {
+                if (entry.categoryId === cat.id) {
+                  hours += entry.hours;
+                  dollars += entry.hours * cat.dailyRate;
+                }
+              });
+            }
+          });
+          return {
+            category: cat,
+            hours: Math.round(hours * 100) / 100,
+            dollars: Math.round(dollars * 100) / 100,
+          };
+        })
+        .filter((item) => item.hours !== 0 || item.dollars !== 0);
+    });
+  }, [weeks, dayEntries, categories]);
+
   const categorySummaries = useMemo(() => {
     return categories.map((category) => {
       const daySet = new Set<number>();
@@ -1265,6 +1292,13 @@ function App() {
               <div className="week-total">
                 <div className="week-dollars">{formatMoney(weeklyDollars[wIdx] || 0)}</div>
                 <div className="week-hours">{formatNum(weeklyHours[wIdx] || 0)} hrs</div>
+                {weeklyCategoryTotals[wIdx]?.map((item) => (
+                  <div key={item.category.id} className="week-category-total">
+                    <span className="week-category-name">{item.category.name}</span>
+                    <span className="week-category-dollars">{formatMoney(item.dollars)}</span>
+                    <span className="week-category-hours">{formatNum(item.hours)} hrs</span>
+                  </div>
+                ))}
               </div>
               {week.map((dayNumber, index) => {
                 if (dayNumber === null) {
