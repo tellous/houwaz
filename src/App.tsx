@@ -361,7 +361,7 @@ function App() {
       weeks.push(Math.round(sum * 100) / 100);
     }
     return weeks;
-  }, [calendarCells, dayEntries]);
+  }, [calendarCells, dayEntries, categories]);
 
   function calculateDayTotal(entries: DayEntry[] = []): number {
     return entries.reduce((total, entry) => {
